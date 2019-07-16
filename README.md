@@ -2,6 +2,8 @@
 
 A Tic Tac Toe app built with React Native.
 
+Click at `Start New Game` to start a game.
+
 ## Installation
 Run `yarn` or `npm install` to install all dependencies.
 
