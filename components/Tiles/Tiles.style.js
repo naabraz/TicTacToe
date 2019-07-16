@@ -4,7 +4,7 @@ export const TilesGroup = styled.View`
   flex-direction: row;
 `;
 
-export const Tile = styled.TouchableOpacity`
+export const TileTouch = styled.TouchableOpacity`
   justify-content: center;
   border: 1px solid black;
   width: 100px;

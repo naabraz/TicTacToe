@@ -13,6 +13,7 @@ export class GameBoard extends React.Component {
     this.state = {
       gameState: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
       currentPlayer: 1,
+      gameOn: false,
     };
   }
 
@@ -45,6 +46,7 @@ export class GameBoard extends React.Component {
 
     currentPosition[row][col] = currentPlayer;
 
+    this.setState({ gameOn: true });
     this.setState({ gameState: currentPosition });
 
     const nextPlayer = currentPlayer === 1 ? -1 : 1;
@@ -64,19 +66,32 @@ export class GameBoard extends React.Component {
   };
 
   onNewGamePress = () => {
-    this.initializeGame();
+    const { gameOn } = this.state;
+    return gameOn
+      ? Alert.alert('Restart Game', 'Do you want to restart the game?', [{ text: 'OK', onPress: () => this.restartGame() }])
+      : this.setState({ gameOn: !gameOn });
   }
 
   initializeGame() {
-    this.setState({ gameState: [[0, 0, 0], [0, 0, 0], [0, 0, 0]], currentPlayer: 1 });
+    this.setState({
+      gameState: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+      currentPlayer: 1,
+      gameOn: false,
+    });
+  }
+
+  restartGame() {
+    this.initializeGame();
+    this.setState({ gameOn: true });
   }
 
   render() {
+    const { gameOn } = this.state;
     return (
       <GameBoardContainer>
         <GameBoardView>
-          <Tiles onTilePress={this.onTilePress} renderIcon={this.renderIcon} />
-          <Button title="New Game" onPress={this.onNewGamePress} />
+          <Tiles onTilePress={this.onTilePress} renderIcon={this.renderIcon} disabled={!gameOn} />
+          <Button title={!gameOn ? 'Start New Game' : 'Restart Game'} onPress={this.onNewGamePress} />
         </GameBoardView>
       </GameBoardContainer>
     );
