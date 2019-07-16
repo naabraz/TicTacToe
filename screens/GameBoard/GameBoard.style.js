@@ -11,6 +11,8 @@ export const GameBoardView = styled.View`
 `;
 
 export const EmptyView = styled.View`
+  width: 100px;
+  height: 100px;
 `;
 
 export const WinnerText = styled.Text`

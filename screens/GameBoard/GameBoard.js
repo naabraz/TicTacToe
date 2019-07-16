@@ -90,7 +90,7 @@ export class GameBoard extends React.Component {
 
   restartGame() {
     this.initializeGame();
-    this.setState({ gameOn: true, gameCount: 0 });
+    this.setState({ gameOn: true, gameCount: 0, matchWinner: '' });
   }
 
   render() {
