@@ -4,7 +4,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { Tiles } from '../../components/Tiles';
 import { getWinner } from './GameBoard.helper';
-import { GameBoardView, GameBoardContainer, EmptyView } from './GameBoard.style';
+import {
+  GameBoardView, GameBoardContainer, EmptyView, WinnerText,
+} from './GameBoard.style';
 
 export class GameBoard extends React.Component {
   constructor(props) {
@@ -14,6 +16,8 @@ export class GameBoard extends React.Component {
       gameState: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
       currentPlayer: 1,
       gameOn: false,
+      gameCount: 0,
+      matchWinner: '',
     };
   }
 
@@ -27,16 +31,16 @@ export class GameBoard extends React.Component {
 
     switch (value) {
       case 1:
-        return <Icon name="close" size={50} color="red" />;
-      case -1:
         return <Icon name="circle-o" size={50} color="green" />;
+      case -1:
+        return <Icon name="close" size={50} color="red" />;
       default:
         return <EmptyView />;
     }
   };
 
   onTilePress = (row, col) => {
-    const { gameState, currentPlayer } = this.state;
+    const { gameState, currentPlayer, gameCount } = this.state;
     const currentValue = gameState[row][col];
     const currentPosition = gameState.slice();
 
@@ -46,8 +50,7 @@ export class GameBoard extends React.Component {
 
     currentPosition[row][col] = currentPlayer;
 
-    this.setState({ gameOn: true });
-    this.setState({ gameState: currentPosition });
+    this.setState({ gameState: currentPosition, gameOn: true, gameCount: gameCount + 1 });
 
     const nextPlayer = currentPlayer === 1 ? -1 : 1;
     this.setState({ currentPlayer: nextPlayer });
@@ -55,13 +58,17 @@ export class GameBoard extends React.Component {
     const matchWinner = getWinner(gameState);
 
     if (matchWinner === 1) {
-      Alert.alert('Player 1 is the winner');
+      this.setState({ matchWinner: 'Player 1 Wins!' });
       this.initializeGame();
     }
 
     if (matchWinner === -1) {
-      Alert.alert('Player 2 is the winner');
+      this.setState({ matchWinner: 'Player 2 Wins!' });
       this.initializeGame();
+    }
+
+    if (matchWinner === 0 && gameCount === 8) {
+      this.setState({ matchWinner: 'It\'s a Tie!' });
     }
   };
 
@@ -77,20 +84,22 @@ export class GameBoard extends React.Component {
       gameState: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
       currentPlayer: 1,
       gameOn: false,
+      gameCount: 0,
     });
   }
 
   restartGame() {
     this.initializeGame();
-    this.setState({ gameOn: true });
+    this.setState({ gameOn: true, gameCount: 0 });
   }
 
   render() {
-    const { gameOn } = this.state;
+    const { gameOn, matchWinner } = this.state;
     return (
       <GameBoardContainer>
         <GameBoardView>
           <Tiles onTilePress={this.onTilePress} renderIcon={this.renderIcon} disabled={!gameOn} />
+          <WinnerText>{matchWinner}</WinnerText>
           <Button title={!gameOn ? 'Start New Game' : 'Restart Game'} onPress={this.onNewGamePress} />
         </GameBoardView>
       </GameBoardContainer>

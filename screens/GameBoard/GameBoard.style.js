@@ -12,3 +12,9 @@ export const GameBoardView = styled.View`
 
 export const EmptyView = styled.View`
 `;
+
+export const WinnerText = styled.Text`
+  align-self: center;
+  justify-content: center;
+  margin-top: 10;
+`;
